@@ -1,0 +1,73 @@
+<script src="jquery-1.5.1.js"></script>
+<script src="calculator.js"></script>
+
+<style>
+  input.size { width:40px; text-align:right; }
+  .clear { cleat:both }
+</style>
+<table cellpadding="10" id="select">
+  <tr>
+    <td>
+      <a href="" class="type"><img src="i/type_1.jpg" /></a>
+      <div style="display:none;">
+        <img src="i/window.jpg" align="middle" />
+        <input type="input" name="height_1" value="1500" class="size" />
+        <div class="clear"></div>
+        <input type="input" name="width_1" value="700" class="size" align="center" />
+      </div>
+    </td>
+    <td>
+      <a href="" class="type"><img src="i/type_2.jpg" /></a>
+      <div style="display:none;">
+        <img src="i/window.jpg" align="middle" />
+        <img src="i/window.jpg" align="middle" />
+        <input type="input" name="height_1" value="1500" class="size" />
+        <div class="clear"></div>
+        <input type="input" name="width_1" value="700" class="size" align="center" />
+        <input type="input" name="width_2" value="700" class="size" align="center" />
+      </div>
+    </td>
+  </tr>
+</table>
+
+<form action="" id="calculator">
+  <table>
+    <tr>
+      <td width="400px">
+        <div id="canvas" style="float:left">
+          <img src="i/window.jpg" align="middle" />
+          <input type="input" name="height_1" value="1500" class="size" />
+          <div class="clear"></div>
+          <input type="input" name="width_1" value="700" class="size" align="center" />
+        </div>
+        <div style="clear:both"></div>
+        <div>Общий размер: <b id="total_size">700 x 1500</b></div>
+      </td>
+      <td>
+        <h3>Параметры изделия</h3>
+        <label>Профиль:</label>
+        <select name="profile" id="profile">
+          <option value="0">ПВХ: Veka 58 мм.</option>
+          <option value="0.55">ПВХ: Veka 70 мм.</option>
+        </select><br />
+        <label>Стеклопакет:</label>
+        <select name="glass_pack" id="glass_pack">
+          <option value="0">Однокамерный</option>
+          <option value="0.1">hвухкамерный</option>
+        </select><br />
+
+        <h3>Параметры установки</h3>
+        <label>Монтаж:</label>
+        <select name="mounting" id="mounting">
+          <option value="0">Нет</option>
+          <option value="1">Панельный дом</option>
+          <option value="2">Кирпичный дом</option>
+        </select><br />
+      </td>
+    </tr>
+  </table>
+
+</form>
+
+<div id="total_cost"></div>
+
