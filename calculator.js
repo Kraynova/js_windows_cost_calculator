@@ -23,39 +23,60 @@ $(function(){
   };
   // <<
 
-  // >> Mediator
   // Для вывода
   var total_size = $('#total_size');
   var total_cost = $('#total_cost');
-
-  // Участвует в обработке
-  var types = $('#select .type');
   var canvas = $('#canvas');
 
-  var mediator = function(element, action){ // Mediator pattern
-    switch(action) {
-      case 'update_size':
-        update_size();
-        break;
-      case 'change_type':
-        change_type(element);
-        update_size();
-      break;
-    }
+  // >> Mediator
 
-    // Считаем сумму для каждого изменения
-    render_total();
+  var mediator = {
+    execute: function(element, action){ // Mediator pattern
+      switch(action) {
+        case 'update_size':
+          this.update_size();
+          break;
+        case 'change_type':
+          this.change_type(element);
+          this.update_size();
+          break;
+        case 'change_window':
+          this.change_window(element);
+          break;
+      }
 
-    function render_total(){
+      // Считаем сумму для каждого изменения
+      this.render_total();
+    },
+    // private functions (do it)
+    render_total: function(){
       total_cost.html(storage.calculate());
-    }
+    },
 
-    function change_type(element){
+    change_type: function(element){
       var type_html = $(element).next().html();
       canvas.html(type_html);
-    }
+    },
 
-    function update_size(){
+    change_window: function(element){
+      var windows = ['i/window.jpg', 'i/window_pv.jpg', 'i/window_pvo.jpg'];
+      var e = $(element).children();
+      switch (e.data('window_type')) {
+        case 1:
+          e.attr('src', windows[2]);
+          e.data('window_type', 2);
+          break;
+        case 2:
+          e.attr('src', windows[0]);
+          e.data('window_type', 0);
+          break;
+        default:
+          e.attr('src', windows[1]);
+          e.data('window_type', 1);
+      }
+    },
+
+    update_size: function(){
       storage.width = 0;
       storage.height = 0;
       $('#canvas input.size').each(function(index){ // element
@@ -75,18 +96,30 @@ $(function(){
   }
   // << 
 
-  // >> События
+  var types = $('#select .type');
   types.click(function(){
-    mediator(this, 'change_type');
+    mediator.execute(this, 'change_type');
     return false;
   });
 
   $('input.size').live('keyup', (function(){
-    mediator(this, 'update_size');
+    mediator.execute(this, 'update_size');
   }));
 
   $('select').change(function(){
-    mediator(this);
+    mediator.execute(this);
   });
-  // <<
+
+  $('input:checkbox').change(function(){
+    mediator.execute(this);
+  });
+  
+  $('a.window').live('click', function(){
+    mediator.execute(this, 'change_window');
+    return false;
+  });
+
+  // >> Execute
+  types.first().click();
+  mediator.render_total();
 })

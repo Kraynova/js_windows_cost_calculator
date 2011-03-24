@@ -1,16 +1,20 @@
 <script src="jquery-1.5.1.js"></script>
 <script src="calculator.js"></script>
 
+<link href="http://yandex.st/jquery-ui/1.8.10/themes/humanity/jquery.ui.all.min.css" media="screen" rel="stylesheet" type="text/css" /> 
+<script src="http://yandex.st/jquery-ui/1.8.10/jquery-ui.min.js" type="text/javascript"></script> 
+
 <style>
   input.size { width:40px; text-align:right; }
   .clear { cleat:both }
+  .none { display:none }
 </style>
 <table cellpadding="10" id="select">
   <tr>
     <td>
       <a href="" class="type"><img src="i/type_1.jpg" /></a>
       <div style="display:none;">
-        <img src="i/window.jpg" align="middle" />
+        <a href="" class="window"><img src="i/window.jpg" align="middle" /></a>
         <input type="input" name="height_1" value="1500" class="size" />
         <div class="clear"></div>
         <input type="input" name="width_1" value="700" class="size" align="center" />
@@ -19,8 +23,8 @@
     <td>
       <a href="" class="type"><img src="i/type_2.jpg" /></a>
       <div style="display:none;">
-        <img src="i/window.jpg" align="middle" />
-        <img src="i/window.jpg" align="middle" />
+        <a href="" class="window"><img src="i/window.jpg" align="middle" /></a>
+        <a href="" class="window"><img src="i/window.jpg" align="middle" /></a>
         <input type="input" name="height_1" value="1500" class="size" />
         <div class="clear"></div>
         <input type="input" name="width_1" value="700" class="size" align="center" />
@@ -35,33 +39,64 @@
     <tr>
       <td width="400px">
         <div id="canvas" style="float:left">
-          <img src="i/window.jpg" align="middle" />
-          <input type="input" name="height_1" value="1500" class="size" />
-          <div class="clear"></div>
-          <input type="input" name="width_1" value="700" class="size" align="center" />
+          <noscript>Для работы калькулятора нужна поддержка javascript.</noscript>
         </div>
         <div style="clear:both"></div>
-        <div>Общий размер: <b id="total_size">700 x 1500</b></div>
+        <div>Общий размер: <b id="total_size"></b></div>
       </td>
       <td>
         <h3>Параметры изделия</h3>
-        <label>Профиль:</label>
-        <select name="profile" id="profile">
+        <label>Профиль:</label><a href="" id="profile_help">?</a>
+        <select name="profile" id="profile_select">
           <option value="0">ПВХ: Veka 58 мм.</option>
           <option value="0.55">ПВХ: Veka 70 мм.</option>
         </select><br />
-        <label>Стеклопакет:</label>
-        <select name="glass_pack" id="glass_pack">
-          <option value="0">Однокамерный</option>
-          <option value="0.1">hвухкамерный</option>
+        <label>Цвет:</label><a href="" id="color_help">?</a>
+        <select name="color" id="color_select">
+          <option value="">Белый/Белый</option>
+          <option value="">Белый/Цвет</option>
+          <option value="">Цвет/Цвет</option>
         </select><br />
+        <label>Стеклопакет:</label><a href="" id="glass_pack_help">?</a>
+        <select name="glass_pack" id="glass_pack_select">
+          <option value="0">Однокамерный</option>
+          <option value="0.1">Двухкамерный</option>
+          <option value="0.2">Трехкамерный</option>
+        </select><br />
+        <label>Стекло:</label><a href="" id="glass_help">?</a>
+        <select name="glass" id="glass_select">
+          <option value="">Стандартное</option>
+          <option value="">Тонированное</option>
+          <option value="">Матовое</option>
+          <option value="">Зеркальное</option>
+        </select><br />
+        <label>Москитная сетка:</label><a href="" id="mosquito_net_help">?</a>
+        <select name="" id="mosquito_net_select">
+          <option value="">Нет</option>
+          <option value="">Стандартная</option>
+        </select><br />
+        <label>Подоконник:</label><a href="" id="sill_help">?</a>
+        <select name="" id="sill_select">
+          <option value="">Нет</option>
+          <option value="">Пластик: до 100 мм.</option>
+        </select><br />
+        <label>Водоотлив:</label><a href="" id="pumping_help">?</a>
+        <input type="checkbox" name="pumping" id="pumping_checkbo" value="" />
+        <label>Козырек:</label><a href="" id="visor_help">?</a>
+        <input type="checkbox" name="visor" id="visor_checkbox" value="" />
 
         <h3>Параметры установки</h3>
-        <label>Монтаж:</label>
-        <select name="mounting" id="mounting">
+        <label>Монтаж:</label><a href="" id="mounting_help">?</a>
+        <select name="mounting" id="mounting_select">
           <option value="0">Нет</option>
           <option value="1">Панельный дом</option>
           <option value="2">Кирпичный дом</option>
+        </select><br />
+        <label>Откосы:</label><a href="" id="shelving_help">?</a>
+        <select name="shelving" id="shelving_select">
+          <option value="0">Нет</option>
+          <option value="1">Гипрок</option>
+          <option value="2">Сендвич-панель</option>
         </select><br />
       </td>
     </tr>
@@ -71,3 +106,36 @@
 
 <div id="total_cost"></div>
 
+<script>
+  $(function() {
+    // a workaround for a flaw in the demo system (http://dev.jqueryui.com/ticket/4375), ignore!
+    $( "#dialog:ui-dialog" ).dialog( "destroy" );
+
+    $(".dialog-message").dialog({
+      autoOpen: false,
+      modal: true,
+      buttons: {
+        Ok: function() {
+          $( this ).dialog( "close" );
+        }
+      }
+    });
+
+    $("#profile_help").click(function(){
+      $("#profile_help_box").dialog('open');
+      return false;
+    });
+
+    $("#glass_pack_help").click(function(){
+      $("#glass_pack_help_box").dialog('open');
+      return false;
+    });
+  });
+</script>
+
+<div id="profile_help_box" class="dialog-message none" title="Download complete">
+  <p>Немного о профилях</p>
+</div>
+<div id="glass_pack_help_box" class="dialog-message none" title="Download complete">
+  <p>Немного о стеклопакетах</p>
+</div>
